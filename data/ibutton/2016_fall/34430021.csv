@@ -1,0 +1,16 @@
+1-Wire/iButton Part Number: DS1921G-F5
+1-Wire/iButton Registration Number: 3300000034430021
+Is Mission Active?  false
+Mission Start:  Sat Nov 07 19:31:00 MST 2015
+Sample Rate:  Every 120 minute(s)
+Number of Mission Samples:  1
+Total Samples:  3601
+Roll Over Enabled?  false
+Roll Over Occurred?  Roll over has NOT occurred
+Active Alarms:  Clock
+Next Clock Alarm At:  Sun Nov 06 00:00:00 MDT 2016
+High Temperature Alarm:  85 �C
+Low Temperature Alarm:  -40 �C
+
+Date/Time,Unit,Value
+11/7/15 7:31:00 PM,C,24
