@@ -7,7 +7,7 @@ CLIMATE = $(DATA)/climate/
 
 ## all		: Fetch data and run analysis
 .PHONY: all 
-all: $(OUT)/decagon_data_with_station_data.RDS $(OUT)/daily_station_dat_rainfall.RDS
+all: $(OUT)/daily_station_dat_rainfall.RDS
 
 .PHONY: export
 export: $(OUT)/weather_files/ $(OUT)/soil_files/
