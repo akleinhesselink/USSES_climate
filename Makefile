@@ -7,7 +7,10 @@ CLIMATE = $(DATA)/climate/
 
 ## all		: Fetch data and run analysis
 .PHONY: all 
-all: $(OUT)/daily_station_dat_rainfall.RDS
+all: $(OUT)/daily_station_dat_rainfall.RDS $(OUT)/spring_spot_measurements.RDS
+
+$(OUT)/spring_spot_measurements.RDS: R/spring_spot_measurements.R
+	Rscript $<
 
 .PHONY: export
 export: $(OUT)/weather_files/ $(OUT)/soil_files/
@@ -17,7 +20,7 @@ $(OUT)/soil_files/: R/export_daily_soil_moisture_for_SOILWAT.R $(OUT)/decagon_da
 
 $(OUT)/weather_files/: R/export_climate_station_data_for_SOILWAT.R $(CLIMATE)/USSES_climate.csv
 	Rscript $<
-	
+
 $(OUT)/decagon_data_with_station_data.RDS $(OUT)/daily_station_dat_rainfall.RDS: R/merge_decagon_with_climate_station_data.R $(OUT)/decagon_data_corrected_values.RDS $(CLIMATE)/USSES_climate.csv
 	Rscript $<
 

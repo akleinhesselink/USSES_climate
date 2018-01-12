@@ -7,7 +7,7 @@ library(dplyr)
 library(tidyr)
 library(lme4)
 
-q_info <- read.csv('../quad_info.csv')
+q_info <- read.csv('data/quad_info.csv')
 
 calibration <- read.csv('data/raw_soil_data/spot_measurements/2015-05-07_soil_probe_calibration.csv')
 
