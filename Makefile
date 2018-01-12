@@ -4,6 +4,7 @@ DATA = data
 SOIL = $(DATA)/raw_soil_data/
 OUT = $(DATA)/processed_soil_data/
 CLIMATE = $(DATA)/climate/
+FIGS=figures
 
 ## all		: Fetch data and run analysis
 .PHONY: all 
@@ -33,6 +34,10 @@ $(OUT)/decagon_data_corrected_dates.RDS: R/correct_decagon_dates.R $(OUT)/decago
 $(OUT)/decagon_data.RDS: R/import_and_format_decagon_data.R $(DATA)/quad_info.csv $(DATA)/sensor_positions.csv $(SOIL)
 	Rscript $<
 	
+
+$(FIGS):
+	mkdir -p $@
+
 ## archive 		: make tar.gz archive of project
 .PHONY: archive 
 archive: $(ARCHIVE_FILE)
@@ -48,6 +53,7 @@ $(ARCHIVE_DIR): LICENSE README.md Makefile config.mk $(CODE_DIR) $(DATA_DIR)
 ## clean		: Remove temporary files 
 .PHONY: clean
 clean:
+	rm -f $(OUT)/*.RDS
 	rm -f Rplots.pdf
 
 ## variables	: Print variables.
