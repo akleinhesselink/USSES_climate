@@ -1,15 +1,11 @@
 rm(list = ls())
+require(stringr)
 
-home <- '~'
-setwd( file.path(home, 'driversdata', 'data', 'idaho_modern', 'iButton_data'))
+dir.create('./data/ibutton/temp_data/')
 
-if(!dir.exists('./temp_data')){dir.create('./temp_data')}
-
-q_info <- read.csv('../quad_info.csv') 
-
-folders <- list.dirs('.', recursive = FALSE , full.names = TRUE) 
-
-folders <- folders[ -which(folders == './temp_data') ]
+q_info <- read.csv('data/quad_info.csv') 
+folders <- list.dirs('data/ibutton', recursive = FALSE , full.names = TRUE) 
+folders <- folders[ -which(folders == 'data/ibutton/temp_data') ]
 
 data_list <- list(NA)
 
@@ -20,37 +16,38 @@ for( i in 1:length(folders)){  # process each folder
   record <- read.csv(record_file)
 
   datafiles <- dir(folders[i], pattern = '[2|3].*21\\.csv', full.names = TRUE) # list all data files in the folder 
-
-  d <- lapply( datafiles, read.csv, skip = 14)  
-
-  names(d) <- gsub(pattern = '.csv', replacement = '', basename(datafiles))
-
-  df <- do.call(rbind, d)
-
-  df$date <- strptime(df$Date.Time, format = '%m/%d/%y %I:%M:%S %p' )
   
+  header <- lapply( datafiles, readLines, 14)
+
+  TZs <- 
+    lapply( header, 
+            function(x) 
+              { 
+              str_extract( x[ str_detect(x, "Mission Start") ] , '[A-Z]+(?= [0-9]{4})')
+              })  
+  
+  d <- lapply( datafiles, read.csv, skip = 14)  
+  
+  names(d) <- gsub(pattern = '.csv', replacement = '', basename(datafiles))
+  d <- mapply(d, TZs, FUN = function(x, tz) { x$tz <- tz; x } , SIMPLIFY = F) 
+  
+  df <- do.call(rbind, d)
+  df$id <- gsub( row.names(df), pattern = '\\.[0-9]+', replacement = '')
+  
+  df$date <- strptime(df$Date.Time, '%m/%d/%y %I:%M:%S %p')
+
   df$date <- as.POSIXct(df$date)
   
-  df$id <- gsub( row.names(df), pattern = '\\.[0-9]+', replacement = '')
-
   df <- merge( df, record , by.x  = 'id', by.y  = 'ibutton')
   
   data_list[[i]] <- df 
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 0fba0904c09a7e298b2a372df5f1a8f9ad0f7d44
 df <- do.call( rbind, data_list )  # bind the data lists from each folder 
 
 q_info$plot <- gsub( q_info$QuadName, pattern = 'X', replacement = '')
 
 df <- merge( df, q_info, by = 'plot') 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0fba0904c09a7e298b2a372df5f1a8f9ad0f7d44
-saveRDS(df, './temp_data/ibutton_data.RDS')
+saveRDS(df, 'data/ibutton/temp_data/ibutton_data.RDS')
 
