@@ -1,9 +1,9 @@
-#include config.mk
-
 DATA = data
 SOIL = $(DATA)/raw_soil_data/
 OUT = $(DATA)/processed_soil_data/
 CLIMATE = $(DATA)/climate/
+
+OUT_FILES = $(OUT)/*.RDS $(OUT)/soil_files/* $(OUT)/weather_files/*
 
 ## all		: Fetch data and run analysis
 .PHONY: all 
@@ -49,6 +49,7 @@ $(ARCHIVE_DIR): LICENSE README.md Makefile config.mk $(CODE_DIR) $(DATA_DIR)
 .PHONY: clean
 clean:
 	rm -f Rplots.pdf
+	rm -f $(OUT_FILES)
 
 ## variables	: Print variables.
 .PHONY: variables
